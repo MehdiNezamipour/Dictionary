@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Dictionary</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="add">add</string>
+    <string name="edit">edit</string>
+    <string name="remove">remove</string>
+    <string name="AddWord">Add Word</string>
+    <string name="editOrRemove">edit/remove</string>
+    <string name="save">save</string>
+
+</resources>
