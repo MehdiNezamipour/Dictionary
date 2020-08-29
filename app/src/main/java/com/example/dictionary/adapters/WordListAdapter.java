@@ -1,34 +1,86 @@
 package com.example.dictionary.adapters;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class WordListAdapter extends RecyclerView.Adapter {
+import com.example.dictionary.R;
+import com.example.dictionary.controller.fragments.EditWordFragment;
+import com.example.dictionary.models.Word;
 
+import java.util.List;
+
+public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordHolder> {
+
+    private List<Word> mWords;
+    private Context mContext;
+    private FragmentManager mFragmentManager;
+
+
+    public WordListAdapter(Context context, FragmentManager fragmentManager) {
+        mContext = context;
+        mFragmentManager = fragmentManager;
+    }
+
+    public void setWords(List<Word> words) {
+        mWords = words;
+    }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return null;
+    public WordHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.word_row_layout, viewGroup, false);
+        return new WordHolder(view);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
+    public void onBindViewHolder(@NonNull WordHolder wordHolder, int i) {
+        wordHolder.bindWord(mWords.get(i));
     }
+
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mWords.size();
     }
 
-    public static class WordHolder extends RecyclerView.ViewHolder{
+    public  class WordHolder extends RecyclerView.ViewHolder {
+
+        public static final String EDIT_WORD_FRAGMENT_TAG = "editWordFragment";
+        private TextView mTextViewEnglishWord;
+        private TextView mTextViewPersianWord;
+        private CardView mCardView;
+
 
         public WordHolder(@NonNull View itemView) {
             super(itemView);
+            mTextViewEnglishWord = itemView.findViewById(R.id.textView_word_english);
+            mTextViewPersianWord = itemView.findViewById(R.id.textView_word_persian);
+            mCardView = itemView.findViewById(R.id.cardView_word_container);
+
+
+        }
+
+        public void bindWord(Word word) {
+            mTextViewEnglishWord.setText(word.getEnglish());
+            mTextViewPersianWord.setText(word.getPersian());
+            mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditWordFragment editWordFragment = EditWordFragment.newInstance(word.getId());
+                    editWordFragment.show(mFragmentManager, WordHolder.EDIT_WORD_FRAGMENT_TAG);
+                }
+            });
         }
     }
 }

@@ -15,6 +15,11 @@ public class Word {
     private String mPersian;
 
 
+    public Word(String english, String persian) {
+        mEnglish = english;
+        mPersian = persian;
+    }
+
     public Long getId() {
         return id;
     }

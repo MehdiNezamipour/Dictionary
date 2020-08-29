@@ -9,5 +9,8 @@
     <string name="AddWord">Add Word</string>
     <string name="editOrRemove">edit/remove</string>
     <string name="save">save</string>
+    <string name="type_a_word">Type a word</string>
+    <string name="persian_meaning">Persian meaning</string>
+    <string name="english_word">English word</string>
 
 </resources>
