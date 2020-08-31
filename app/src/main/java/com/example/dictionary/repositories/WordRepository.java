@@ -52,5 +52,11 @@ public class WordRepository {
         mDataBase.getWordDAO().deleteAll();
     }
 
+    public List<Word> search(String search) {
+        search = search + "%";
+        return mDataBase.getWordDAO().search(search);
+
+    }
+
 
 }

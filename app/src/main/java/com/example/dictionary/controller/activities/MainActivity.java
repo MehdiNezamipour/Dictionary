@@ -13,8 +13,12 @@ import android.widget.EditText;
 import com.example.dictionary.R;
 import com.example.dictionary.adapters.WordListAdapter;
 import com.example.dictionary.controller.fragments.AddWordFragment;
+import com.example.dictionary.models.Word;
 import com.example.dictionary.repositories.WordRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AddWordFragment.OnWordAddListener {
 
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
     private WordListAdapter mAdapter;
 
     private WordRepository mRepository;
+    private String mSearchString;
 
 
     @Override
@@ -41,8 +46,9 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
         if (mAdapter == null) {
             mAdapter = new WordListAdapter(this, getSupportFragmentManager());
         }
-        mAdapter.setWords(mRepository.getList());
-        mAdapter.notifyDataSetChanged();
+
+        //mAdapter.setWords(mRepository.getList());
+        //mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -72,19 +78,24 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if (charSequence.length() > 0) {
+                    mSearchString = charSequence.toString();
+                    mAdapter.setWords(mRepository.search(mSearchString));
+                } else {
+                    mAdapter.setWords(new ArrayList<>(0));
+                }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
 
     @Override
     public void onWordAdd() {
-        mAdapter.setWords(mRepository.getList());
+        mAdapter.setWords(mRepository.search(mSearchString));
         mAdapter.notifyDataSetChanged();
     }
 }

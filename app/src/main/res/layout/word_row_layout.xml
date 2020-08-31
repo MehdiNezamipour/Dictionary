@@ -37,7 +37,16 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_word_english"
             tools:text="Persian word" />
 
-
+        <ImageView
+            android:id="@+id/imageView_share_word"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:src="@mipmap/ic_share2"
+            app:layout_constraintBottom_toTopOf="@+id/textView_word_persian"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

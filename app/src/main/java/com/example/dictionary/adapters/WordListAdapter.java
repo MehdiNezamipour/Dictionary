@@ -1,9 +1,11 @@
 package com.example.dictionary.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +18,12 @@ import com.example.dictionary.R;
 import com.example.dictionary.controller.fragments.EditWordFragment;
 import com.example.dictionary.models.Word;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordHolder> {
 
-    private List<Word> mWords;
+    private List<Word> mWords = new ArrayList<>();
     private Context mContext;
     private FragmentManager mFragmentManager;
 
@@ -54,12 +57,13 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordHo
         return mWords.size();
     }
 
-    public  class WordHolder extends RecyclerView.ViewHolder {
+    public class WordHolder extends RecyclerView.ViewHolder {
 
         public static final String EDIT_WORD_FRAGMENT_TAG = "editWordFragment";
         private TextView mTextViewEnglishWord;
         private TextView mTextViewPersianWord;
         private CardView mCardView;
+        private ImageView mImageViewShareWord;
 
 
         public WordHolder(@NonNull View itemView) {
@@ -67,6 +71,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordHo
             mTextViewEnglishWord = itemView.findViewById(R.id.textView_word_english);
             mTextViewPersianWord = itemView.findViewById(R.id.textView_word_persian);
             mCardView = itemView.findViewById(R.id.cardView_word_container);
+            mImageViewShareWord = itemView.findViewById(R.id.imageView_share_word);
 
 
         }
@@ -81,6 +86,24 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordHo
                     editWordFragment.show(mFragmentManager, WordHolder.EDIT_WORD_FRAGMENT_TAG);
                 }
             });
+            mImageViewShareWord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getWordData(word));
+                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.wordShareSubject);
+                    sendIntent.setType("text/plain");
+
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    if (sendIntent.resolveActivity(mContext.getPackageManager()) != null)
+                        mContext.startActivity(shareIntent);
+
+                }
+            });
+        }
+
+        public String getWordData(Word word) {
+            return "English Word : " + word.getEnglish() + "\n" + "Persian Meaning : " + word.getPersian();
         }
     }
 }

@@ -31,6 +31,9 @@ public interface WordDAO {
     @Query("DELETE FROM wordTable")
     void deleteAll();
 
+    @Query("SELECT * FROM wordTable WHERE English LIKE :search OR Persian LIKE :search")
+    List<Word> search(String search);
+
 
 
 }
