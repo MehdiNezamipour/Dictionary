@@ -1,14 +1,14 @@
 package com.example.dictionary.controller.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dictionary.R;
 import com.example.dictionary.adapters.WordListAdapter;
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
     private WordListAdapter mAdapter;
 
     private WordRepository mRepository;
-    private String mSearchString;
-
+    private String mSearchString = "";
+    private List<Word> mEmptyList = new ArrayList<>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +46,12 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
         if (mAdapter == null) {
             mAdapter = new WordListAdapter(this, getSupportFragmentManager());
         }
-
-        //mAdapter.setWords(mRepository.getList());
-        //mAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(mAdapter);
+        updateSubtitle();
+    }
 
+    private void updateSubtitle() {
+        getSupportActionBar().setSubtitle(String.valueOf(mRepository.getList().size()) + " Words");
     }
 
     private void findViews() {
@@ -68,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
             }
         });
 
-
-        //TODO
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -82,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
                     mSearchString = charSequence.toString();
                     mAdapter.setWords(mRepository.search(mSearchString));
                 } else {
-                    mAdapter.setWords(new ArrayList<>(0));
+                    mSearchString = "";
+                    mAdapter.setWords(mEmptyList);
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -95,7 +95,12 @@ public class MainActivity extends AppCompatActivity implements AddWordFragment.O
 
     @Override
     public void onWordAdd() {
-        mAdapter.setWords(mRepository.search(mSearchString));
+        updateSubtitle();
+        if (mSearchString.equals("")) {
+            mAdapter.setWords(mEmptyList);
+        } else {
+            mAdapter.setWords(mRepository.search(mSearchString));
+        }
         mAdapter.notifyDataSetChanged();
     }
 }
